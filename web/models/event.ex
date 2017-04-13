@@ -1,5 +1,4 @@
 defmodule Events.Event do
-  @derive[Poison.Encoder]
   use Ecto.Schema
   import Ecto.Changeset
 
