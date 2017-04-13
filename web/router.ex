@@ -22,7 +22,7 @@ defmodule Events.Router do
 
     get "/", PageController, :index
     post "/uuid", IdentityController, :generate
-    get "/track", EventController, :create
+    post "/track", EventController, :create
   end
 
   # Other scopes may use custom stacks.
