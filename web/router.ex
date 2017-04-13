@@ -15,9 +15,13 @@ defmodule Events.Router do
 
   scope "/", Events do
     pipe_through :browser # Use the default browser stack
+  end
+
+  scope "/", Events do
+    pipe_through :api
 
     get "/", PageController, :index
-    get "/uuid", IdentityController, :generate
+    post "/uuid", IdentityController, :generate
   end
 
   # Other scopes may use custom stacks.
