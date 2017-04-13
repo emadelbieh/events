@@ -15,7 +15,7 @@ defmodule Events.Event do
   end
 
   @event ~w(click view request)
-  @platforms ["topbar", "extension", "visual search", "search", "native"]
+  @valid_platforms ~w(topbar extension visual_search search native)
 
   def changeset(struct, params) do
     fields = [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid]
@@ -23,5 +23,6 @@ defmodule Events.Event do
     struct
     |> cast(params, fields)
     |> validate_required(fields)
+    |> validate_inclusion(:platform, @valid_platforms)
   end
 end
