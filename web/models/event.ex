@@ -14,7 +14,8 @@ defmodule Events.Event do
     field :uuid
   end
 
-  @event_types ~w(click view request)
+  @event ~w(click view request)
+  @platforms ["topbar", "extension", "visual search", "search", "native"]
 
   def changeset(struct, params) do
     fields = [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid]
