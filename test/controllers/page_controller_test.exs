@@ -3,6 +3,6 @@ defmodule Events.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"
-    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
+    assert json_response(conn, 200) == %{"error" => "unauthorized"}
   end
 end
