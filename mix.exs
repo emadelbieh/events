@@ -37,6 +37,7 @@ defmodule Events.Mixfile do
      {:cowboy, "~> 1.0"},
      {:uuid, "~> 1.1"},
      {:ecto, "~> 2.0"},
+     {:dynamodb, "~> 0.0.1"},
    ]
   end
 end
