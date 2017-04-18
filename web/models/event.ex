@@ -5,7 +5,7 @@ defmodule Events.Event do
   embedded_schema do
     field :type
     field :data
-    field :data_details
+    field :data_details, :map
     field :platform
     field :publisherid
     field :subid
