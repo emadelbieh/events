@@ -1,30 +1,29 @@
 defmodule Events.Event do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Events.Web, :model
 
-  embedded_schema do
-    field :type
-    field :data
+  schema "events" do
+    field :type, :string
+    field :data, :string
     field :data_details, :map
-    field :platform
-    field :publisherid
-    field :subid
-    field :date
-    field :url
-    field :uuid
+    field :platform, :string
+    field :publisherid, :string
+    field :subid, :string
+    field :date, Ecto.DateTime
+    field :url, :string
+    field :uuid, :string
 
     timestamps()
   end
 
-  @event ~w(click view request)
   @valid_platforms ~w(topbar extension visual_search search native)
 
-  def changeset(struct, params) do
-    fields = [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid]
-
+  @doc """
+  Builds a changeset based on the `struct` and `params`.
+  """
+  def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, fields)
-    |> validate_required(fields)
+    |> cast(params, [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
+    |> validate_required([:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
     |> validate_inclusion(:platform, @valid_platforms)
   end
 end
