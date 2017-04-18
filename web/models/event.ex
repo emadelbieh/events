@@ -12,6 +12,8 @@ defmodule Events.Event do
     field :date
     field :url
     field :uuid
+
+    timestamps()
   end
 
   @event ~w(click view request)
