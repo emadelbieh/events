@@ -8,6 +8,8 @@ defmodule Events do
 
     # Define workers and child supervisors to be supervised
     children = [
+      # Start the Ecto repository
+      supervisor(Events.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Events.Endpoint, []),
       # Start your own worker by calling: Events.Worker.start_link(arg1, arg2, arg3)
