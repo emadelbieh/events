@@ -45,24 +45,4 @@ defmodule Events.EventControllerTest do
     conn = post conn, event_path(conn, :create), event: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
-
-  test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    event = Repo.insert! %Event{}
-    conn = put conn, event_path(conn, :update, event), event: @valid_attrs
-    assert json_response(conn, 200)["data"]["id"]
-    assert Repo.get_by(Event, @valid_attrs)
-  end
-
-  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    event = Repo.insert! %Event{}
-    conn = put conn, event_path(conn, :update, event), event: @invalid_attrs
-    assert json_response(conn, 422)["errors"] != %{}
-  end
-
-  test "deletes chosen resource", %{conn: conn} do
-    event = Repo.insert! %Event{}
-    conn = delete conn, event_path(conn, :delete, event)
-    assert response(conn, 204)
-    refute Repo.get(Event, event.id)
-  end
 end

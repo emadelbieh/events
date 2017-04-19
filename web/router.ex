@@ -21,9 +21,12 @@ defmodule Events.Router do
     pipe_through :api
 
     get "/", PageController, :index
-    post "/uuid", IdentityController, :generate
+
+    post "/uuid", UserController, :create
+    resources "/users", UserController, except: [:new, :edit]
+
     post "/track", EventController, :create
-    resources "/events", EventController, except: [:new, :edit]
+    resources "/events", EventController, except: [:new, :edit, :update, :delete]
   end
 
   # Other scopes may use custom stacks.
