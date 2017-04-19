@@ -36,7 +36,7 @@ defmodule Events.EventControllerTest do
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
-    conn = post conn, event_path(conn, :create), event: @valid_attrs
+    conn = post conn, event_path(conn, :create), @valid_attrs
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(Event, @valid_attrs)
   end
