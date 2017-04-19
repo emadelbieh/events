@@ -32,11 +32,15 @@ defmodule Events.Event do
     subid = get_field(changeset, :subid)
     uuid = get_field(changeset, :uuid)
 
-    case Events.Repo.get_by(Events.User, %{subid: subid, id: uuid}) do
-      nil ->
-        add_error(changeset, :uuid, "is invalid")
-      _ ->
-        changeset
+    if subid == nil || uuid == nil do
+      add_error(changeset, :uuid, "is invalid")
+    else
+      case Events.Repo.get_by(Events.User, %{subid: subid, id: uuid}) do
+        nil ->
+          add_error(changeset, :uuid, "is invalid")
+        _ ->
+          changeset
+      end
     end
   end
 end
