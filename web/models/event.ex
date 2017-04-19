@@ -25,5 +25,18 @@ defmodule Events.Event do
     |> cast(params, [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
     |> validate_required([:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
     |> validate_inclusion(:platform, @valid_platforms)
+    |> validate_subid_matches_uuid()
+  end
+
+  defp validate_subid_matches_uuid(changeset) do
+    subid = get_field(changeset, :subid)
+    uuid = get_field(changeset, :uuid)
+
+    case Events.Repo.get_by(Events.User, %{subid: subid, id: uuid}) do
+      nil ->
+        add_error(changeset, :uuid, "is invalid")
+      _ ->
+        changeset
+    end
   end
 end
