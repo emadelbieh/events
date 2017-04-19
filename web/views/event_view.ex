@@ -9,6 +9,10 @@ defmodule Events.EventView do
     %{data: render_one(event, Events.EventView, "event.json")}
   end
 
+  def render("show_blank.json", _) do
+    %{success: "true"}
+  end
+
   def render("event.json", %{event: event}) do
     %{id: event.id,
       type: event.type,
