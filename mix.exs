@@ -39,6 +39,7 @@ defmodule Events.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:uuid, "~> 1.1"},
+     {:distillery, "~> 1.0"},
    ]
   end
 
