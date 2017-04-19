@@ -22,6 +22,8 @@ defmodule Events.Router do
 
     get "/", PageController, :index
     post "/uuid", IdentityController, :generate
+    post "/track", EventController, :create
+    resources "/events", EventController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
