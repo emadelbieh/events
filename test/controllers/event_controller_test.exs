@@ -2,7 +2,7 @@ defmodule Events.EventControllerTest do
   use Events.ConnCase
 
   alias Events.Event
-  @valid_attrs %{data: "some content", data_details: %{}, date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}, platform: "some content", publisherid: "some content", subid: "some content", type: "some content", url: "some content", uuid: "some content"}
+  @valid_attrs %{data: "some content", data_details: %{}, date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}, platform: "visual_search", publisherid: "some content", subid: "some content", type: "some content", url: "some content", uuid: "some content"}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
