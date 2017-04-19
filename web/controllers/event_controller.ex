@@ -2,6 +2,7 @@ defmodule Events.EventController do
   use Events.Web, :controller
 
   alias Events.Event
+  alias Events.Unprocessable
 
   def index(conn, _params) do
     events = Repo.all(Event)
@@ -15,12 +16,18 @@ defmodule Events.EventController do
       {:ok, event} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", event_path(conn, :show, event))
-        |> render("show.json", event: event)
+        |> render("show_blank.json", %{})
+        #|> put_resp_header("location", event_path(conn, :show, event))
+        #|> render("show.json", event: event)
       {:error, changeset} ->
+        unprocessable_changeset = Unprocessable.changeset(%Unprocessable{}, %{params: event_params})
+        Repo.insert(unprocessable_changeset)
         conn
-        |> put_status(:unprocessable_entity)
-        |> render(Events.ChangesetView, "error.json", changeset: changeset)
+        |> put_status(:created)
+        |> render("show_blank.json", %{})
+        #conn
+        #|> put_status(:unprocessable_entity)
+        #|> render(Events.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
