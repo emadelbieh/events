@@ -3,12 +3,15 @@ defmodule Events.UserController do
 
   alias Events.User
 
+  plug :contextualize when action in [:create]
+
   def index(conn, _params) do
     users = Repo.all(User)
     render(conn, "index.json", users: users)
   end
 
   def create(conn, user_params) do
+    user_params = Map.merge(user_params, %{"context" => conn.assigns.context})
     changeset = User.changeset(%User{}, user_params)
 
     case Repo.insert(changeset) do
@@ -51,5 +54,24 @@ defmodule Events.UserController do
     Repo.delete!(user)
 
     send_resp(conn, :no_content, "")
+  end
+
+  defp contextualize(conn, _opts) do
+    req_headers = conn.req_headers |> Enum.into(%{})
+
+    context = %{
+      ip: req_headers["cf-connecting-ip"] || direct_ip(conn),
+      country: req_headers["cf-ipcountry"] || "XX",
+      subid: conn.params["subid"]
+    }
+
+    assign(conn, :context, context)
+  end
+
+  defp direct_ip(conn) do
+    case conn.remote_ip do
+      {a,b,c,d} -> "#{a}.#{b}.#{c}.#{d}"
+      _ -> nil
+    end
   end
 end

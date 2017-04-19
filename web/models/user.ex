@@ -5,7 +5,7 @@ defmodule Events.User do
   @derive {Phoenix.Param, key: :id}
 
   schema "users" do
-    field :subid, :string, virtual: true
+    field :subid, :string
     field :context, :map
 
     timestamps()
