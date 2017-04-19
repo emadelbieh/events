@@ -8,3 +8,11 @@ config :events, Events.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+database_url = System.get_env("DATABASE_URL") || "postgres://postgres:postgres@localhost/events_test"
+
+# Configure your database
+config :events, Events.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: database_url,
+  pool: Ecto.Adapters.SQL.Sandbox

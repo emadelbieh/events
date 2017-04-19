@@ -20,6 +20,11 @@ defmodule Events.ChannelCase do
       # Import conveniences for testing with channels
       use Phoenix.ChannelTest
 
+      alias Events.Repo
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query
+
 
       # The default endpoint for testing
       @endpoint Events.Endpoint
@@ -27,6 +32,11 @@ defmodule Events.ChannelCase do
   end
 
   setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Events.Repo)
+
+    unless tags[:async] do
+      Ecto.Adapters.SQL.Sandbox.mode(Events.Repo, {:shared, self()})
+    end
 
     :ok
   end
