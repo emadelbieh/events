@@ -10,14 +10,14 @@ defmodule Events.UserController do
     render(conn, "index.json", users: users)
   end
 
-  def create(conn, %{"ip" => ip, "api_key" => api_key}) do
-    uuid = Events.UUIDGenerator.generate(ip, api_key)
+  def create(conn, %{"ip" => ip, "publisher_id" => publisher_id}) do
+    uuid = Events.UUIDGenerator.generate(ip, publisher_id)
 
     case Repo.get_by(User, uuid: uuid) do
       nil ->
         changeset = User.changeset(%User{}, %{
           "uuid" => uuid,
-          "context" => %{ip: ip, api_key: api_key}
+          "context" => %{ip: ip, publisher_id: publisher_id}
         })
 
         case Repo.insert(changeset) do

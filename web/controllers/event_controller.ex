@@ -10,6 +10,13 @@ defmodule Events.EventController do
   end
 
   def create(conn, event_params) do
+    event_params = if is_binary(event_params["data_details"]) do
+      data_details = Poison.decode!(event_params["data_details"])
+      Map.put(event_params, "data_details", data_details)
+    else
+      event_params
+    end
+
     changeset = Event.changeset(%Event{}, event_params)
 
     case Repo.insert(changeset) do

@@ -2,7 +2,7 @@ defmodule Events.UserControllerTest do
   use Events.ConnCase
 
   alias Events.User
-  @valid_attrs %{context: %{}, ip: "8.8.8.8", api_key: "12345"}
+  @valid_attrs %{context: %{}, ip: "8.8.8.8", publisher_id: "1"}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
