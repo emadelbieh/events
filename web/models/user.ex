@@ -5,6 +5,7 @@ defmodule Events.User do
   @derive {Phoenix.Param, key: :id}
 
   schema "users" do
+    field :uuid, Ecto.UUID
     field :subid, :string
     field :context, :map
 
@@ -16,7 +17,8 @@ defmodule Events.User do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:subid, :context])
-    |> validate_required([:subid])
+    |> cast(params, [:uuid, :context])
+    |> validate_required([:uuid])
+    |> unique_constraint(:uuid)
   end
 end
