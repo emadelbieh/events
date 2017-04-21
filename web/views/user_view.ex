@@ -10,7 +10,7 @@ defmodule Events.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{uuid: user.id,
+    %{uuid: user.uuid,
       context: user.context}
   end
 end
