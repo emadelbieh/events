@@ -1,5 +1,3 @@
-require IEx
-
 defmodule Events.EventController do
   use Events.Web, :controller
 

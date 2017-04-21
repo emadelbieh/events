@@ -1,5 +1,5 @@
 defmodule Events.EventControllerTest do
-  use Events.ConnCase, async: false
+  use Events.ConnCase
 
   alias Events.Event
   @valid_attrs %{data: "some content", data_details: %{}, date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}, platform: "visual_search", publisherid: "1", subid: "DEV", type: "some content", url: "some content", uuid: "some content"}
