@@ -3,28 +3,42 @@ defmodule Events.UserController do
 
   alias Events.User
 
-  plug :contextualize when action in [:create]
+  #plug :contextualize when action in [:create]
 
   def index(conn, _params) do
     users = Repo.all(User)
     render(conn, "index.json", users: users)
   end
 
-  def create(conn, user_params) do
-    user_params = Map.merge(user_params, %{"context" => conn.assigns.context})
-    changeset = User.changeset(%User{}, user_params)
+  def create(conn, %{"ip" => ip, "api_key" => api_key}) do
+    uuid = Events.UUIDGenerator.generate(ip, api_key)
 
-    case Repo.insert(changeset) do
-      {:ok, user} ->
+    case Repo.get_by(User, uuid: uuid) do
+      nil ->
+        changeset = User.changeset(%User{}, %{
+          "uuid" => uuid,
+          "context" => %{ip: ip, api_key: api_key}
+        })
+
+        case Repo.insert(changeset) do
+          {:ok, user} ->
+            conn
+            |> put_status(:created)
+            |> put_resp_header("location", user_path(conn, :show, user))
+            |> render("show.json", user: user)
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(Events.ChangesetView, "error.json", changeset: changeset)
+        end
+
+      user ->
         conn
         |> put_status(:created)
         |> put_resp_header("location", user_path(conn, :show, user))
         |> render("show.json", user: user)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Events.ChangesetView, "error.json", changeset: changeset)
     end
+
   end
 
   def show(conn, %{"id" => id}) do
@@ -56,22 +70,22 @@ defmodule Events.UserController do
     send_resp(conn, :no_content, "")
   end
 
-  defp contextualize(conn, _opts) do
-    req_headers = conn.req_headers |> Enum.into(%{})
+  #defp contextualize(conn, _opts) do
+  #  req_headers = conn.req_headers |> Enum.into(%{})
 
-    context = %{
-      ip: req_headers["cf-connecting-ip"] || direct_ip(conn),
-      country: req_headers["cf-ipcountry"] || "XX",
-      subid: conn.params["subid"]
-    }
+  #  context = %{
+  #    ip: req_headers["cf-connecting-ip"] || direct_ip(conn),
+  #    country: req_headers["cf-ipcountry"] || "XX",
+  #    subid: conn.params["subid"]
+  #  }
 
-    assign(conn, :context, context)
-  end
+  #  assign(conn, :context, context)
+  #end
 
-  defp direct_ip(conn) do
-    case conn.remote_ip do
-      {a,b,c,d} -> "#{a}.#{b}.#{c}.#{d}"
-      _ -> nil
-    end
-  end
+  #defp direct_ip(conn) do
+  #  case conn.remote_ip do
+  #    {a,b,c,d} -> "#{a}.#{b}.#{c}.#{d}"
+  #    _ -> nil
+  #  end
+  #end
 end
