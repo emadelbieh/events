@@ -2,7 +2,7 @@ defmodule Events.UserControllerTest do
   use Events.ConnCase
 
   alias Events.User
-  @valid_attrs %{context: %{}, subid: "DEV"}
+  @valid_attrs %{context: %{}, ip: "8.8.8.8", api_key: "12345"}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
@@ -18,7 +18,7 @@ defmodule Events.UserControllerTest do
     user = Repo.insert! %User{}
     conn = get conn, user_path(conn, :show, user)
     assert json_response(conn, 200)["data"] == %{
-      "uuid" => user.id,
+      "uuid" => user.uuid,
       "context" => user.context}
   end
 
@@ -32,7 +32,7 @@ defmodule Events.UserControllerTest do
     conn = post conn, user_path(conn, :create), @valid_attrs
     uuid = json_response(conn, 201)["data"]["uuid"]
     assert uuid
-    assert Repo.get_by(User, id: uuid)
+    assert Repo.get_by(User, uuid: uuid)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do

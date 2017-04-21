@@ -3,7 +3,7 @@ defmodule Events.UserTest do
 
   alias Events.User
 
-  @valid_attrs %{context: %{}, subid: "DEV"}
+  @valid_attrs %{context: %{}, uuid: "f97182d5-decb-48c9-acc4-30e77630f48c"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

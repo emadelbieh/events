@@ -38,7 +38,12 @@ defmodule Events.UserController do
         |> put_resp_header("location", user_path(conn, :show, user))
         |> render("show.json", user: user)
     end
+  end
 
+  def create(conn, _) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{error: "invalid parameters"})
   end
 
   def show(conn, %{"id" => id}) do
