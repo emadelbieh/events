@@ -23,7 +23,7 @@ defmodule Events.Event do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
-    |> validate_required([:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
+    |> validate_required([:type, :data, :data_details, :platform, :date, :url, :uuid])
     |> validate_inclusion(:platform, @valid_platforms)
   end
 end
