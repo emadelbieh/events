@@ -38,12 +38,12 @@ defmodule Events.EventControllerTest do
 
   test "creates and renders resource when data is valid", %{conn: conn, user: user} do
     conn = post conn, event_path(conn, :create), Map.merge(@valid_attrs, %{uuid: user.uuid})
-    assert json_response(conn, 201)["success"] == "true"
+    assert json_response(conn, 201)
     assert Repo.get_by(Event, Map.merge(@valid_attrs, %{uuid: user.uuid}))
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
     conn = post conn, event_path(conn, :create), event: @invalid_attrs
-    assert json_response(conn, 201)["success"] == "true"
+    assert json_response(conn, 422)
   end
 end
