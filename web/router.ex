@@ -26,6 +26,7 @@ defmodule Events.Router do
     resources "/users", UserController, except: [:new, :edit]
 
     post "/track", EventController, :create
+    get "/events/search", EventController, :search
     resources "/events", EventController, except: [:new, :edit, :update, :delete]
   end
 
