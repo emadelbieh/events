@@ -66,8 +66,8 @@ defmodule Events.EventController do
     send_resp(conn, :no_content, "")
   end
 
-  def search(conn, %{"subid" => subid}) do
-    events = Repo.all(from e in Event, where: e.subid == ^subid)
+  def search(conn, %{"subids" => subids}) do
+    events = Repo.all(from e in Event, where: e.subid in ^subids)
     render(conn, "index.json", events: events)
   end
 end
