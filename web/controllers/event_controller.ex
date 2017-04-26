@@ -65,4 +65,14 @@ defmodule Events.EventController do
 
     send_resp(conn, :no_content, "")
   end
+
+  def search(conn, %{"subids" => subids, "start_date" => start_date, "end_date" => end_date}) do
+    events = Repo.all(from e in Event,
+      where: e.subid in ^subids,
+      where: fragment("? >= ? and ? < ?",
+        e.date, type(^start_date,Ecto.Date),
+        e.date, type(^end_date, Ecto.Date)))
+
+    render(conn, "index.json", events: events)
+  end
 end
