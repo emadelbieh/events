@@ -26,6 +26,9 @@ config :events, Events.Endpoint,
     ]
   ]
 
+config :events, :amplitude,
+  api_key: "c8353e008b3d15a7e584db46a9e44e51"
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
