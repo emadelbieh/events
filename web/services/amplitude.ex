@@ -7,7 +7,7 @@ defmodule Events.Amplitude do
   - [Property list as of v1.1.0](https://github.com/blackswan-ventures/apientry/issues/65#issuecomment-233222630)
   """
 
-  @amplitude Application.get_env(:apientry, :amplitude) |> Enum.into(%{})
+  @amplitude Application.get_env(:events, :amplitude) |> Enum.into(%{})
 
   def track(%{uuid: user_id, data: event_type, data_details: event_properties} = data) do
     params = %{
@@ -26,7 +26,7 @@ defmodule Events.Amplitude do
       case HTTPoison.post(@amplitude.url, data, headers) do
         {:ok, _} ->
           IO.puts "Event tracked to Amplitude."
-        {:error, reason ->
+        {:error, reason} ->
           IO.puts("Amplitude error: #{IO.inspect(reason)}")
       end
     end
