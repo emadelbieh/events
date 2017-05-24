@@ -40,6 +40,7 @@ defmodule Events.Mixfile do
      {:cowboy, "~> 1.0"},
      {:uuid, "~> 1.1"},
      {:distillery, "~> 1.0"},
+     {:httpoison, "~> 0.11.1"},
    ]
   end
 
