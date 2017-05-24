@@ -18,12 +18,12 @@ defmodule Events.EventController do
       event_params
     end
 
-    Amplitude.track(event_params)
-
     changeset = Event.changeset(%Event{}, event_params)
 
     case Repo.insert(changeset) do
       {:ok, event} ->
+        Amplitude.track(event_params)
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", event_path(conn, :show, event))
