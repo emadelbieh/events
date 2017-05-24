@@ -3,6 +3,7 @@ defmodule Events.EventController do
 
   alias Events.Event
   alias Events.Unprocessable
+  alias Events.Amplitude
 
   def index(conn, _params) do
     events = Repo.all(Event)
@@ -16,6 +17,8 @@ defmodule Events.EventController do
     else
       event_params
     end
+
+    Amplitude.track(event_params)
 
     changeset = Event.changeset(%Event{}, event_params)
 
