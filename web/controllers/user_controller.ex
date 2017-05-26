@@ -10,6 +10,13 @@ defmodule Events.UserController do
     render(conn, "index.json", users: users)
   end
 
+  def get_ip_address(conn) do
+    case get_req_header(conn, "cf-connecting-ip") do
+      [] -> nil
+      ip -> ip
+    end
+  end
+
   def create(conn, %{"ip" => ip, "publisher_id" => publisher_id}) do
     uuid = Events.UUIDGenerator.generate(ip, publisher_id)
 
@@ -39,6 +46,12 @@ defmodule Events.UserController do
         |> render("show.json", user: user)
     end
   end
+
+  def create(conn, %{"publisher_id" => publisher_id}) do
+    ip = get_ip_address(conn)
+    create(conn, %{"ip" => ip, "publisher_id" => publisher_id})
+  end
+
 
   def create(conn, _) do
     conn
