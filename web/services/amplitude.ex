@@ -9,11 +9,11 @@ defmodule Events.Amplitude do
 
   @amplitude Application.get_env(:events, :amplitude) |> Enum.into(%{})
 
-  def track(%{"uuid" => user_id, "type" => event_type, "data" => data, "data_details" => event_properties} = data) do
+  def track(%{"uuid" => user_id, "type" => event_type, "data" => data_type, "data_details" => event_properties} = data) do
     params = %{
       "user_id" => user_id,
       "event_type" => event_type,
-      "data" => data,
+      "data" => data_type,
       "event_properties" => Enum.into(event_properties, Map.delete(data, :data_details))
     }
     send_request(params)
