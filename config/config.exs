@@ -20,7 +20,7 @@ config :events, Events.Endpoint,
 config :events, :amplitude,
   url: "https://api.amplitude.com/httpapi",
   app_id: "151574",
-  api_key: "13755ad8f786334b31e7e92b80808748",
+  api_key: "c1d3d7723afd6d2d595d7fe60837193d",
   secret_key: "a978ce4186ee60c202079ef56274222e"
 
 # Configures Elixir's Logger
