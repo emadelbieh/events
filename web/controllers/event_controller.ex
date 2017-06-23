@@ -80,7 +80,7 @@ defmodule Events.EventController do
       %{
         "date" => event.date,
         "uuid" => event.uuid,
-        "geo" => (event.data_details["geo"] || event.data_details["country"] || get_country(conn))
+        "geo" => (event.data_details["geo"] || event.data_details["country_code"] || event.data_details["country"])
       }
     end)
     |> process()
@@ -135,15 +135,11 @@ defmodule Events.EventController do
     |> Ecto.Date.to_string()
   end
 
-  defp get_geo(%{"data_details" => data_details}) do
-    case data_details["geo"] do
+  defp get_geo(event) do
+    case event["geo"] do
       nil -> nil
       [geo|_] -> String.upcase(geo)
       geo -> String.upcase(geo)
     end
-  end
-
-  defp get_geo(_) do
-    nil
   end
 end
