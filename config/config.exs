@@ -17,6 +17,12 @@ config :events, Events.Endpoint,
   pubsub: [name: Events.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :events, :amplitude,
+  url: "https://api.amplitude.com/httpapi",
+  app_id: "151574",
+  api_key: "c1d3d7723afd6d2d595d7fe60837193d",
+  secret_key: "a978ce4186ee60c202079ef56274222e"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

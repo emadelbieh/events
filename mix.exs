@@ -19,7 +19,7 @@ defmodule Events.Mixfile do
   def application do
     [mod: {Events, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :uuid]]
+                    :phoenix_ecto, :postgrex, :uuid, :httpoison]]
   end
 
   # Specifies which paths to compile per environment.
@@ -40,6 +40,7 @@ defmodule Events.Mixfile do
      {:cowboy, "~> 1.0"},
      {:uuid, "~> 1.1"},
      {:distillery, "~> 1.0"},
+     {:httpoison, "~> 0.11.1"},
    ]
   end
 
