@@ -2,7 +2,6 @@ defmodule Events.EventController do
   use Events.Web, :controller
 
   alias Events.Event
-  alias Events.Unprocessable
   alias Events.Amplitude
 
   def index(conn, _params) do
@@ -76,6 +75,75 @@ defmodule Events.EventController do
         e.date, type(^start_date,Ecto.Date),
         e.date, type(^end_date, Ecto.Date)))
 
-    render(conn, "index.json", events: events)
+    events = events
+    |> Enum.map(fn event ->
+      %{
+        "date" => event.date,
+        "uuid" => event.uuid,
+        "geo" => (event.data_details["geo"] || event.data_details["country"] || get_country(conn))
+      }
+    end)
+    |> process()
+
+    json(conn, events)
+    #render(conn, "index.json", events: events)
+  end
+
+  def get_country(conn) do
+    case get_req_header(conn, "cf-ipcountry") do
+      [] -> nil
+      geo -> geo
+    end
+  end
+
+  defp process(events) do
+    events
+    |> Stream.map(&to_internal/1)
+    |> Enum.uniq()
+    |> Enum.reduce(%{}, &merge_date/2)
+  end
+
+  defp merge_date(element, accumulator) do
+    case accumulator[element.date] do
+      nil -> Map.put(accumulator, element.date, merge_geo(element, %{}))
+      map -> Map.put(accumulator, element.date, merge_geo(element, map))
+    end
+  end
+
+  defp merge_geo(element, accumulator) do
+    case accumulator[element.geo] do
+      nil -> Map.put(accumulator, element.geo, %{"dau" => 1})
+      %{"dau" => dau} -> Map.put(accumulator, element.geo, %{"dau" => dau+1})
+    end
+  end
+
+  defp to_internal(event) do
+    %{}
+    |> Map.put(:uuid, get_uuid(event))
+    |> Map.put(:date, get_date(event))
+    |> Map.put(:geo, get_geo(event))
+  end
+
+  defp get_uuid(event) do
+    event["uuid"]
+  end
+
+  defp get_date(event) do
+    event["date"]
+    |> Ecto.DateTime.cast!()
+    |> Ecto.DateTime.to_date()
+    |> Ecto.Date.to_string()
+  end
+
+  defp get_geo(%{"data_details" => data_details}) do
+    case data_details["geo"] do
+      nil -> nil
+      [geo|_] -> String.upcase(geo)
+      geo -> String.upcase(geo)
+    end
+  end
+
+  defp get_geo(_) do
+    nil
   end
 end
