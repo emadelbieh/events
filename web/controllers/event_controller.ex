@@ -17,6 +17,8 @@ defmodule Events.EventController do
       event_params
     end
 
+    event_params = assign_geo_if_needed(conn, event_params)
+
     changeset = Event.changeset(%Event{}, event_params)
 
     case Repo.insert(changeset) do
@@ -28,15 +30,23 @@ defmodule Events.EventController do
         |> put_resp_header("location", event_path(conn, :show, event))
         |> render("show.json", event: event)
       {:error, changeset} ->
-        #unprocessable_changeset = Unprocessable.changeset(%Unprocessable{}, %{params: event_params})
-        #Repo.insert(unprocessable_changeset)
-        #conn
-        #|> put_status(:created)
-        #|> render("show_blank.json", %{})
         conn
         |> put_status(:unprocessable_entity)
         |> render(Events.ChangesetView, "error.json", changeset: changeset)
     end
+  end
+
+  def assign_geo_if_needed(conn, %{"data_details" => data_details} = event_params) do
+    if data_details["geo"] || data_details["country_code"] || data_details["country"] do
+      event_params
+    else
+      data_details = Map.put(data_details, "geo", get_country(conn))
+      Map.put(event_params, "data_details", data_details)
+    end
+  end
+
+  def assign_geo_if_needed(_, event_params) do
+    event_params
   end
 
   def show(conn, %{"id" => id}) do
@@ -92,6 +102,7 @@ defmodule Events.EventController do
   def get_country(conn) do
     case get_req_header(conn, "cf-ipcountry") do
       [] -> nil
+      [geo] -> geo
       geo -> geo
     end
   end
