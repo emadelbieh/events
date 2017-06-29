@@ -36,12 +36,12 @@ defmodule Events.EventController do
     end
   end
 
-  def assign_geo_if_needed(conn, %{"data_details" => data_details} = event_params) do
-    if data_details["geo"] || data_details["country_code"] || data_details["country"] do
-      event_params
+  def assign_geo_if_needed(conn, event_params) do
+    geo = (data_details["geo"] || data_details["country_code"] || data_details["country"])
+    if geo do
+      Map.put(event_params, "geo", geo)
     else
-      data_details = Map.put(data_details, "geo", get_country(conn))
-      Map.put(event_params, "data_details", data_details)
+      Map.put(event_params, "geo", get_country(conn))
     end
   end
 
@@ -141,9 +141,7 @@ defmodule Events.EventController do
 
   defp get_date(event) do
     event["date"]
-    |> Ecto.DateTime.cast!()
-    |> Ecto.DateTime.to_date()
-    |> Ecto.Date.to_string()
+    |> Date.to_string()
   end
 
   defp get_geo(event) do
