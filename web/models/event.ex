@@ -8,7 +8,7 @@ defmodule Events.Event do
     field :platform, :string
     field :publisherid, :string
     field :subid, :string
-    field :date, :date
+    field :date, Ecto.Date
     field :url, :string
     field :uuid, :string
     field :geo, :string

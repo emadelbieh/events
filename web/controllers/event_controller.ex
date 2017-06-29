@@ -19,6 +19,9 @@ defmodule Events.EventController do
 
     event_params = assign_geo_if_needed(conn, event_params)
 
+    date = Ecto.Date.cast(event_params["date"])
+    Map.put(event_params, "date", date)
+
     changeset = Event.changeset(%Event{}, event_params)
 
     case Repo.insert(changeset) do
