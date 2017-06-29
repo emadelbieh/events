@@ -41,6 +41,14 @@ defmodule Events.EventController do
 
   def assign_geo_if_needed(conn, %{"data_details" => data_details} = event_params) do
     geo = (data_details["geo"] || data_details["country_code"] || data_details["country"])
+
+    geo = case geo do
+      [geo] -> geo
+      nil -> nil
+      [] -> nil
+      geo -> geo
+    end
+
     if geo do
       Map.put(event_params, "geo", geo)
     else
