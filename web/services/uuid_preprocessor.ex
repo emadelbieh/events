@@ -3,12 +3,24 @@ defmodule Events.UuidPreprocessor do
 
   import Ecto.Query
 
-  def cache(subids) when is_list(subids) do
-    result_set = query(subids)
+  def cache(subids, start_date, end_date) when is_list(subids) do
+    subids
+    |> query(start_date, end_date)
+    |> process()
+    |> write_to_file(subids)
   end
 
-  def cache(_) do
+  def cache(_, _, _) do
     IO.puts("Expected argument to be a list")
+  end
+
+  def query(subids, start_date, end_date) do
+    Repo.all(from e in Event,
+      where: e.subid in ^subids
+        and e.date >= ^Ecto.Date.cast!(start_date)
+        and e.date < ^Ecto.Date.cast!(end_date),
+      group_by: [e.date, e.subid, e.geo],
+      select: {e.subid, e.date, e.geo, count(e.uuid, :distinct)})
   end
 
   def process(result_set) do
@@ -23,10 +35,6 @@ defmodule Events.UuidPreprocessor do
         Map.put(acc, date, %{geo => dau})
       end
     end)
-  end
-
-  def query(subids) do
-    Repo.all(from e in Event, where: e.subid in ^subids and e.date >= ^Ecto.Date.cast!("2017-06-01") and e.date < ^Ecto.Date.cast!("2017-07-01"), group_by: [e.date, e.subid, e.geo], select: {e.subid, e.date, e.geo, count(e.uuid, :distinct)})
   end
   
   def write_to_file(result_set, subids) do
