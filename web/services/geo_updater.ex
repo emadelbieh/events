@@ -10,7 +10,7 @@ defmodule Events.GeoUpdater do
     end)
   end
 
-  def get_geo(%{data_details: data_details} = event) do
+  def get_geo(%{data_details: data_details}) do
     case (data_details["geo"] || data_details["country_code"] || data_details["country"]) do
       [geo] -> geo
       nil -> nil
