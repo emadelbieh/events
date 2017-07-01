@@ -90,22 +90,7 @@ defmodule Events.EventController do
   end
 
   def search(conn, %{"subids" => subids, "start_date" => start_date, "end_date" => end_date}) do
-    events = Repo.all(from e in Event,
-      where: e.subid in ^subids,
-      where: fragment("? >= ? and ? < ?",
-        e.date, type(^start_date,Ecto.Date),
-        e.date, type(^end_date, Ecto.Date)))
-
-    events = events
-    |> Enum.map(fn event ->
-      %{
-        "date" => event.date,
-        "uuid" => event.uuid,
-        "geo" => (event.data_details["geo"] || event.data_details["country_code"] || event.data_details["country"])
-      }
-    end)
-    |> process()
-
+    events = Events.UuidPreprocessor.cache(subids, start_date, end_date)
     json(conn, events)
     #render(conn, "index.json", events: events)
   end
@@ -115,51 +100,6 @@ defmodule Events.EventController do
       [] -> nil
       [geo] -> geo
       geo -> geo
-    end
-  end
-
-  defp process(events) do
-    events
-    |> Stream.map(&to_internal/1)
-    |> Enum.uniq()
-    |> Enum.reduce(%{}, &merge_date/2)
-  end
-
-  defp merge_date(element, accumulator) do
-    case accumulator[element.date] do
-      nil -> Map.put(accumulator, element.date, merge_geo(element, %{}))
-      map -> Map.put(accumulator, element.date, merge_geo(element, map))
-    end
-  end
-
-  defp merge_geo(element, accumulator) do
-    case accumulator[element.geo] do
-      nil -> Map.put(accumulator, element.geo, %{"dau" => 1})
-      %{"dau" => dau} -> Map.put(accumulator, element.geo, %{"dau" => dau+1})
-    end
-  end
-
-  defp to_internal(event) do
-    %{}
-    |> Map.put(:uuid, get_uuid(event))
-    |> Map.put(:date, get_date(event))
-    |> Map.put(:geo, get_geo(event))
-  end
-
-  defp get_uuid(event) do
-    event["uuid"]
-  end
-
-  defp get_date(event) do
-    event["date"]
-    |> Date.to_string()
-  end
-
-  defp get_geo(event) do
-    case event["geo"] do
-      nil -> nil
-      [geo|_] -> String.upcase(geo)
-      geo -> String.upcase(geo)
     end
   end
 end
