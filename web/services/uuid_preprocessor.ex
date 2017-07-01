@@ -7,7 +7,7 @@ defmodule Events.UuidPreprocessor do
     subids
     |> query(start_date, end_date)
     |> process()
-    |> write_to_file(subids)
+    #|> write_to_file(subids)
   end
 
   def cache(_, _, _) do
@@ -36,7 +36,7 @@ defmodule Events.UuidPreprocessor do
       end
     end)
   end
-  
+
   def write_to_file(result_set, subids) do
     filename = create_filename(subids)
     case File.open(filename, [:write]) do

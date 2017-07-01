@@ -28,7 +28,8 @@ config :events, Events.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: "postgres://events:7NtNDhy.J73qBAE@events-production.c1snflmeflqw.us-east-1.rds.amazonaws.com:5432/events_prod",
   pool_size: 10,
-  ssl: true
+  ssl: true,
+  timeout: 300*1000
 
 # ## SSL Support
 #
