@@ -28,6 +28,8 @@ defmodule Events.Router do
     post "/track", EventController, :create
     get "/events/search", EventController, :search
     resources "/events", EventController, except: [:new, :edit, :update, :delete]
+
+    get "/dau/search", DauController, :search
   end
 
   # Other scopes may use custom stacks.

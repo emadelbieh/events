@@ -8,9 +8,10 @@ defmodule Events.Event do
     field :platform, :string
     field :publisherid, :string
     field :subid, :string
-    field :date, Ecto.DateTime
+    field :date, Ecto.Date
     field :url, :string
     field :uuid, :string
+    field :geo, :string
 
     timestamps()
   end
@@ -22,7 +23,7 @@ defmodule Events.Event do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid])
+    |> cast(params, [:type, :data, :data_details, :platform, :publisherid, :subid, :date, :url, :uuid, :geo])
     |> validate_required([:type, :data, :data_details, :platform, :date, :url, :uuid])
     |> validate_inclusion(:platform, @valid_platforms)
   end
