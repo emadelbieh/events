@@ -31,9 +31,6 @@ config :events, Events.Repo,
   ssl: true,
   timeout: 300*1000
 
-config :events, Events.ElasticSearch,
-  url: "https://search-events-6gjxg6bh7ccyopna6sva7mz4l4.us-east-1.es.amazonaws.com"
-
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
