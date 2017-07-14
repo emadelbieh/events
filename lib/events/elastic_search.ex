@@ -18,7 +18,7 @@ defmodule Events.ElasticSearch do
   end
 
   def request(method, url, data, headers \\ [], opts \\ []) do
-    headers = [[{"Content-Type", "application/json"}] | headers]
+    headers = [{"Content-Type", "application/json"} | headers]
     opts = Keyword.put opts, :basic_auth, basic_auth()
     HTTP.request method, url, data, headers, opts
   end
