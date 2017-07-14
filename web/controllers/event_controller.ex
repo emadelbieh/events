@@ -2,7 +2,7 @@ defmodule Events.EventController do
   use Events.Web, :controller
 
   alias Events.Event
-  alias Events.Amplitude
+  alias Events.{Amplitude, ElasticSearch}
 
   def index(conn, _params) do
     events = Repo.all(Event)
@@ -20,6 +20,12 @@ defmodule Events.EventController do
     event_params = assign_geo_if_needed(conn, event_params)
 
     changeset = Event.changeset(%Event{}, event_params)
+
+    case ElasticSearch.create_event(event_params) do
+      {:ok, result} -> nil
+      {:error, error} ->
+        Logger.warn "Create event failure: #{inspect error}"
+    end
 
     case Repo.insert(changeset) do
       {:ok, event} ->
