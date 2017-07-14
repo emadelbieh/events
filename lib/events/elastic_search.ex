@@ -17,10 +17,9 @@ defmodule Events.ElasticSearch do
     end
   end
 
-  def request(method, url, data, headers \\ [], opts \\ []) do
+  def request(method, url, data, headers \\ []) do
     headers = [{"Content-Type", "application/json"} | headers]
-    opts = Keyword.put opts, :basic_auth, basic_auth()
-    HTTP.request method, url, data, headers, opts
+    HTTP.request method, url, data, headers, hackney: [basic_auth: basic_auth()]
   end
 
   def index_name() do
