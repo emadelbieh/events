@@ -3,6 +3,7 @@ defmodule Events.EventController do
 
   alias Events.Event
   alias Events.{Amplitude, ElasticSearch}
+  require Logger
 
   def index(conn, _params) do
     events = Repo.all(Event)
@@ -24,7 +25,7 @@ defmodule Events.EventController do
     changeset = Event.changeset(%Event{}, event_params)
 
     case ElasticSearch.create_event(event_params) do
-      {:ok, result} -> nil
+      {:ok, _result} -> nil
       {:error, error} ->
         Logger.warn "Create event failure: #{inspect error}"
     end
