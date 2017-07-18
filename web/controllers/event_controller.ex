@@ -24,11 +24,7 @@ defmodule Events.EventController do
 
     changeset = Event.changeset(%Event{}, event_params)
 
-    case ElasticSearch.create_event(event_params) do
-      {:ok, _result} -> nil
-      {:error, error} ->
-        Logger.warn "Create event failure: #{inspect error}"
-    end
+    ElasticSearch.create_event(event_params)
 
     case Repo.insert(changeset) do
       {:ok, event} ->
