@@ -16,13 +16,11 @@ RUN apk --update add --virtual build-dependencies wget ca-certificates && \
 ENV PATH $PATH:/opt/elixir-${ELIXIR_VERSION}/bin
 ENV MIX_ENV prod
 
-RUN mkdir /server && chmod -R 777 /server && \
-    apk --no-cache add git build-base \
+RUN apk --no-cache add git build-base \
       erlang-dev erlang-parsetools erlang-syntax-tools \
       erlang-xmerl erlang-ssl erlang-inets erlang-public-key erlang-edoc \
       erlang-eunit erlang-tools erlang-common-test erlang-crypto erlang-asn1 && \
     mix local.hex --force && mix local.rebar --force
-
 
 COPY mix.exs mix.lock /tmp/
 RUN cd /tmp && mix deps.get
