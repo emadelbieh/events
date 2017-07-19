@@ -8,11 +8,5 @@
     {
       "ContainerPort": "3000"
     }
-  ],
-  "Volumes": [
-    {
-      "HostDirectory": "/var/app/events",
-      "ContainerDirectory": "/app"
-    }
   ]
 }
