@@ -19,10 +19,10 @@ defmodule Events.EventController do
     end
 
     event_params = assign_geo_if_needed(conn, event_params)
-
-    changeset = Event.changeset(%Event{}, event_params)
-
     ElasticSearch.create_event(event_params)
+
+    event_params = Map.put(event_params, "date", Ecto.Date.utc())
+    changeset = Event.changeset(%Event{}, event_params)
 
     case Repo.insert(changeset) do
       {:ok, event} ->
