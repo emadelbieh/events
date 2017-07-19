@@ -34,14 +34,23 @@ defmodule Events.ElasticSearch do
         {:ok, _} ->
           Logger.info "Event #{data["type"]} logged."
         {:error, reason} ->
-          Logger.warn "Error creating event #{data["type"]}."
+          Logger.warn "Error creating event #{data["type"]} with reason #{inspect reason}"
       end
     end
   end
 
-  def request(method, url, data, headers \\ []) do
+  def request(method, url, data, headers \\ [], opts \\ []) do
     headers = [{"Content-Type", "application/json"} | headers]
-    HTTP.request method, url, data, headers, hackney: [basic_auth: basic_auth()], timeout: 20000, recv_timeout: 20000
+    opts = Keyword.merge(opts, request_opts())
+    HTTP.request method, url, data, headers, opts
+  end
+
+  defp request_opts() do
+    if auth = basic_auth() do
+      [hackney: [basic_auth: auth], timeout: 20000, recv_timeout: 20000]
+    else
+      [timeout: 20000, recv_timeout: 20000]
+    end
   end
 
   def index_name() do

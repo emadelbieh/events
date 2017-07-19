@@ -2,7 +2,7 @@ defmodule Events.EventController do
   use Events.Web, :controller
 
   alias Events.Event
-  alias Events.{Amplitude, ElasticSearch}
+  alias Events.ElasticSearch
   require Logger
 
   def index(conn, _params) do
@@ -20,16 +20,12 @@ defmodule Events.EventController do
 
     event_params = assign_geo_if_needed(conn, event_params)
 
-    Map.put(event_params, "date", Ecto.Date.utc())
-
     changeset = Event.changeset(%Event{}, event_params)
 
     ElasticSearch.create_event(event_params)
 
     case Repo.insert(changeset) do
       {:ok, event} ->
-        Amplitude.track(event_params)
-
         conn
         |> put_status(:created)
         |> put_resp_header("location", event_path(conn, :show, event))
