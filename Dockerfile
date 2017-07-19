@@ -23,9 +23,14 @@ RUN mkdir /server && chmod -R 777 /server && \
       erlang-eunit erlang-tools erlang-common-test erlang-crypto erlang-asn1 && \
     mix local.hex --force && mix local.rebar --force
 
+
+COPY mix.exs mix.lock /tmp/
+RUN cd /tmp && mix deps.get
+RUN mkdir -p /app && cp -a /tmp/deps /app
+
 ADD . /app
 WORKDIR /app
-RUN mix do deps.get, compile
+RUN mix compile
 
 EXPOSE 3000
 
