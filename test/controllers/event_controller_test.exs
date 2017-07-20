@@ -10,11 +10,6 @@ defmodule Events.EventControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json"), user: user}
   end
 
-  test "lists all entries on index", %{conn: conn} do
-    conn = get conn, event_path(conn, :index)
-    assert json_response(conn, 200)["data"] == []
-  end
-
   test "shows chosen resource", %{conn: conn} do
     event = Repo.insert! %Event{}
     conn = get conn, event_path(conn, :show, event)
