@@ -33,6 +33,12 @@ environment :prod do
   set cookie: :"y8dcn$VNqMv()(e(sM`$;NK@{o&NIYEPwZ{F^jQFGf/7fzw)O(.h:nEEeu<F<fTP"
 end
 
+environment :staging do
+  set include_erts: true
+  set include_src: false
+  set cookie: :"y8dcn$VNqMv()(e(sM`$;NK@{oka`UMGs5N3`c/Z[D`,ZYMGyR^l)}sYvl=;oKZr"
+end
+
 # You may define one or more releases in this file.
 # If you have not set a default release, or selected one
 # when running `mix release`, the first release in the file
@@ -44,4 +50,3 @@ release :events do
     :runtime_tools
   ]
 end
-
