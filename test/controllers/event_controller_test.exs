@@ -2,12 +2,11 @@ defmodule Events.EventControllerTest do
   use Events.ConnCase
 
   alias Events.Event
-  @valid_attrs %{data: "some content", data_details: %{}, platform: "visual_search", publisherid: "1", subid: "DEV", type: "some content", url: "some content", uuid: "some content"}
+  @valid_attrs %{data: "some content", data_details: %{geo: "US"}, platform: "visual_search", publisherid: "1", subid: "DEV", type: "some content", url: "some content", uuid: "some content"}
   @invalid_attrs %{uuid: "ffe90ab0-76bf-47e4-84dc-c75aab459b54", subid: "DEV", data_details: %{}}
 
   setup %{conn: conn} do
-    user = Events.Repo.insert!(%Events.User{uuid: "ffe90ab0-76bf-47e4-84dc-c75aab459b54"})
-    {:ok, conn: put_req_header(conn, "accept", "application/json"), user: user}
+    {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
   test "shows chosen resource", %{conn: conn} do
@@ -31,10 +30,20 @@ defmodule Events.EventControllerTest do
     end
   end
 
-  test "creates and renders resource when data is valid", %{conn: conn, user: user} do
-    conn = post conn, event_path(conn, :create), Map.merge(@valid_attrs, %{uuid: user.uuid})
+  test "creates and renders resource when data is valid", %{conn: conn} do
+    conn = post conn, event_path(conn, :create), @valid_attrs
     assert json_response(conn, 201)
-    assert Repo.get_by(Event, Map.merge(@valid_attrs, %{uuid: user.uuid}))
+    event = Repo.get_by(Event, @valid_attrs)
+    assert event
+    assert event.geo == "US"
+  end
+
+  test "creates event when data_details is a string", %{conn: conn} do
+    conn = post conn, event_path(conn, :create), Map.merge(@valid_attrs, %{data_details: "{\"geo\":\"FR\"}"})
+    assert json_response(conn, 201)
+    event = Repo.get_by(Event, Map.merge(@valid_attrs, %{data_details: %{geo: "FR"}}))
+    assert event
+    assert event.geo == "FR"
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
