@@ -26,7 +26,7 @@ defmodule Events.ElasticSearch do
 
   def create_event(data) do
     timestamp = Timex.now() |> Timex.format!("{ISO:Extended}")
-    body = Map.put(data, :date, timestamp) |> Poison.encode!
+    body = Map.put(data, "date", timestamp) |> Poison.encode!
     url = Path.join([url(), index_name(), @doc_type])
 
     Task.start fn ->
