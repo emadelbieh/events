@@ -31,9 +31,4 @@ defmodule Events.Router do
 
     get "/dau/search", DauController, :search
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", Events do
-  #   pipe_through :api
-  # end
 end
