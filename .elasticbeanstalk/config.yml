@@ -1,0 +1,12 @@
+branch-defaults:
+  aws-beanstalk:
+    environment: Events-staging
+  master:
+    environment: Events-staging
+global:
+  application_name: Events
+  default_ec2_keyname: admin2
+  default_platform: 64bit Amazon Linux 2017.03 v2.7.0 running Docker 17.03.1-ce
+  default_region: us-east-1
+  profile: null
+  sc: git
