@@ -6,20 +6,46 @@ defmodule Events.ElasticSearch do
 
   @event_mapping %{
     properties: %{
-      type: "keyword",
-      data: "keyword",
-      platform: "keyword",
-      publisherid: "keyword",
-      subid: "keyword",
-      date: "date",
-      url: "keyword",
-      uuid: "keyword",
-      geo: "keyword"
+      type: %{type: "keyword"},
+      data: %{type: "keyword"},
+      platform: %{type: "keyword"},
+      publisherid: %{type: "keyword"},
+      subid: %{type: "keyword"},
+      date: %{type: "date"},
+      url: %{type: "text"},
+      uuid: %{type: "keyword"},
+      geo: %{type: "keyword"},
+      data_details: %{
+        properties: %{
+          keyword: %{type: "keyword"},
+          img: %{type: "text"},
+          price: %{
+            type: "scaled_float",
+            scaling_factor: 100
+          },
+          value: %{type: "keyword"},
+          domain: %{type: "keyword"},
+          ip_address: %{type: "keyword"}
+        }
+      }
     }
   }
 
-  def put_event_mapping(index_name) do
-    url = Path.join([url(), index_name, "_mapping", @doc_type])
+  @doc """
+  For creating a mapping on an index. Refer to
+  https://www.elastic.co/guide/en/elasticsearch/reference/5.x/indices-create-index.html#create-index-settings
+  """
+  def create_event_index(time \\ nil) do
+    url = Path.join([url(), index_name(time)])
+    body = %{mappings: %{event: @event_mapping}} |> Poison.encode!
+    request :put, url, body
+  end
+
+  @doc """
+  https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html
+  """
+  def put_event_mapping(time \\ nil) do
+    url = Path.join([url(), index_name(time), "_mapping", @doc_type])
     body = Poison.encode!(@event_mapping)
     request :put, url, body
   end
@@ -53,9 +79,8 @@ defmodule Events.ElasticSearch do
     end
   end
 
-  def index_name() do
-    timestamp = Timex.now()
-    |> Timex.format!("{YYYY}{0M}{0D}")
+  def index_name(time \\ nil) do
+    timestamp = (time || Timex.now()) |> Timex.format!("{YYYY}{0M}{0D}")
     "events-#{timestamp}"
   end
 

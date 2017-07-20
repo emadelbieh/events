@@ -12,6 +12,7 @@ defmodule Events do
       supervisor(Events.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Events.Endpoint, []),
+      worker(Events.ElasticSearchIndexer, []),
       # Start your own worker by calling: Events.Worker.start_link(arg1, arg2, arg3)
       # worker(Events.Worker, [arg1, arg2, arg3]),
     ]
