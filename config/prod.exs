@@ -17,8 +17,6 @@ config :events, Events.Endpoint,
     host: "events.apientry.com",
     port: 80
   ],
-  cache_static_manifest: "priv/static/manifest.json",
-  root: ".",
   server: true
 
 # Do not print debug messages in production
