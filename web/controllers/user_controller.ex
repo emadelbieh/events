@@ -16,14 +16,14 @@ defmodule Events.UserController do
     end
   end
 
-  def create(conn, %{"ip" => ip, "publisher_id" => publisher_id}) do
-    uuid = Events.UUIDGenerator.generate(ip, publisher_id)
+  def create(conn, %{"fingerprint" => fingerprint, "publisher_id" => publisher_id}) do
+    uuid = Events.UUIDGenerator.generate(fingerprint, publisher_id)
 
     case Repo.get_by(User, uuid: uuid) do
       nil ->
         changeset = User.changeset(%User{}, %{
           "uuid" => uuid,
-          "context" => %{ip: ip, publisher_id: publisher_id}
+          "context" => %{fingerprint: fingerprint, publisher_id: publisher_id}
         })
 
         case Repo.insert(changeset) do
@@ -46,11 +46,14 @@ defmodule Events.UserController do
     end
   end
 
-  def create(conn, %{"publisher_id" => publisher_id}) do
-    ip = get_ip_address(conn)
-    create(conn, %{"ip" => ip, "publisher_id" => publisher_id})
+  def create(conn, %{"ip" => ip, "publisher_id" => publisher_id}) do
+    create(conn, %{"fingerprint" => ip, "publisher_id" => publisher_id})
   end
 
+  def create(conn, %{"publisher_id" => publisher_id}) do
+    ip = get_ip_address(conn)
+    create(conn, %{"fingerprint" => ip, "publisher_id" => publisher_id})
+  end
 
   def create(conn, _) do
     conn
