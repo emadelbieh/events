@@ -30,7 +30,6 @@ defmodule Events.Web do
     quote do
       use Phoenix.Controller
 
-      alias Events.Repo
       import Ecto
       import Ecto.Query
 
@@ -65,7 +64,6 @@ defmodule Events.Web do
     quote do
       use Phoenix.Channel
 
-      alias Events.Repo
       import Ecto
       import Ecto.Query
       import Events.Gettext

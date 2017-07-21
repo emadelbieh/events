@@ -11,10 +11,4 @@ config :logger, level: :warn
 
 database_url = System.get_env("DATABASE_URL") || "postgres://postgres:postgres@localhost/events_test"
 
-# Configure your database
-config :events, Events.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: database_url,
-  pool: Ecto.Adapters.SQL.Sandbox
-
 config :events, :events_indexing_interval, 1000
