@@ -31,5 +31,5 @@ RUN mkdir -p /app && cp -a /tmp/deps /app
 ADD . /app
 WORKDIR /app
 
-RUN mix ecto.migrate
+RUN mix do compile, ecto.migrate
 RUN mix release --verbose
