@@ -9,20 +9,9 @@ defmodule Events.EventController do
     event_params = Preprocessor.prepare(event_params, conn)
     ElasticSearch.create_event(event_params)
 
-    event_params = Map.put(event_params, "date", Ecto.Date.utc())
-    changeset = Event.changeset(%Event{}, event_params)
-
-    case Repo.insert(changeset) do
-      {:ok, event} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", event_path(conn, :show, event))
-        |> render("show.json", event: event)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Events.ChangesetView, "error.json", changeset: changeset)
-    end
+    conn
+    |> put_status(:created)
+    |> json(event_params)
   end
 
   def show(conn, %{"id" => id}) do
