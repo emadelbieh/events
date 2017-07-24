@@ -30,14 +30,4 @@ defmodule Events.ChannelCase do
       @endpoint Events.Endpoint
     end
   end
-
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Events.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Events.Repo, {:shared, self()})
-    end
-
-    :ok
-  end
 end
