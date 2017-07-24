@@ -18,20 +18,12 @@ defmodule Events.Web do
 
   def model do
     quote do
-      use Ecto.Schema
-
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
     end
   end
 
   def controller do
     quote do
       use Phoenix.Controller
-
-      import Ecto
-      import Ecto.Query
 
       import Events.Router.Helpers
       import Events.Gettext
@@ -64,8 +56,6 @@ defmodule Events.Web do
     quote do
       use Phoenix.Channel
 
-      import Ecto
-      import Ecto.Query
       import Events.Gettext
     end
   end
