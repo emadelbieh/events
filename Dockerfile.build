@@ -27,4 +27,4 @@ RUN cp -a /tmp/deps /app
 
 ADD . /app
 
-RUN mix do compile, ecto.migrate, release --verbose
+RUN mix do compile, release --verbose
