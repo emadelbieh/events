@@ -1,10 +1,8 @@
 FROM alpine:3.5
 
-RUN apk --update add erlang && rm -rf /var/cache/apk/*
+ENV ELIXIR_VERSION=1.4.4
 
-ENV ELIXIR_VERSION 1.4.4
-
-RUN apk --update add --virtual build-dependencies wget ca-certificates && \
+RUN apk --update add erlang --virtual build-dependencies wget ca-certificates && \
     wget --no-check-certificate https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip && \
     mkdir -p /opt/elixir-${ELIXIR_VERSION}/ && \
     unzip Precompiled.zip -d /opt/elixir-${ELIXIR_VERSION}/ && \
@@ -13,7 +11,8 @@ RUN apk --update add --virtual build-dependencies wget ca-certificates && \
     rm -rf /etc/ssl && \
     rm -rf /var/cache/apk/*
 
-ENV PATH $PATH:/opt/elixir-${ELIXIR_VERSION}/bin
+ARG env=prod
+ENV PATH=$PATH:/opt/elixir-${ELIXIR_VERSION}/bin MIX_ENV=$env
 
 RUN apk --no-cache add git build-base \
       erlang-dev erlang-parsetools erlang-syntax-tools erlang-sasl \
@@ -21,15 +20,11 @@ RUN apk --no-cache add git build-base \
       erlang-eunit erlang-tools erlang-common-test erlang-crypto erlang-asn1 && \
     mix local.hex --force && mix local.rebar --force
 
-ARG env=prod
-ENV MIX_ENV=$env
-
 COPY mix.exs mix.lock /tmp/
 RUN cd /tmp && mix do deps.get, deps.compile
-RUN mkdir -p /app && cp -a /tmp/deps /app
+WORKDIR /app
+RUN cp -a /tmp/deps /app
 
 ADD . /app
-WORKDIR /app
 
-RUN mix do compile, ecto.migrate
-RUN mix release --verbose
+RUN mix do compile, ecto.migrate, release --verbose
