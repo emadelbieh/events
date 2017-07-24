@@ -22,13 +22,6 @@ config :events, Events.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
-config :events, Events.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: "postgres://events:7NtNDhy.J73qBAE@events-production.c1snflmeflqw.us-east-1.rds.amazonaws.com:5432/events_prod",
-  pool_size: 10,
-  ssl: true,
-  timeout: 300*1000
-
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

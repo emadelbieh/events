@@ -9,7 +9,6 @@ defmodule Events.Mixfile do
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     aliases: aliases(),
      deps: deps()]
   end
 
@@ -19,7 +18,7 @@ defmodule Events.Mixfile do
   def application do
     [mod: {Events, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :uuid, :httpoison, :timex]]
+                    :postgrex, :uuid, :httpoison, :timex]]
   end
 
   # Specifies which paths to compile per environment.
@@ -32,7 +31,6 @@ defmodule Events.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.1"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
@@ -44,17 +42,5 @@ defmodule Events.Mixfile do
      {:httpoison, "~> 0.11.1"},
      {:timex, "~> 3.1.21"}
    ]
-  end
-
-  # Aliases are shortcuts or tasks specific to the current project.
-  # For example, to create, migrate and run the seeds file at once:
-  #
-  #     $ mix ecto.setup
-  #
-  # See the documentation for `Mix` for more info on aliases.
-  defp aliases do
-    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end
