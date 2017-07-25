@@ -6,9 +6,7 @@ defmodule Events.ElasticSearchGateway do
 
   def search(date \\ nil, params) do
     index_pattern = create_index_pattern(date)
-    auth = {"elastic", "zA1Sm36snXyGbe4W2Y8k1SWR"}
-    opts = [hackney: [basic_auth: auth], timeout: 20000, recv_timeout: 20000]
-    ES.request("post", get_search_url(index_pattern), params, [], opts)
+    ES.request("post", get_search_url(index_pattern), params)
   end
 
   def get_search_url(index_pattern) do
