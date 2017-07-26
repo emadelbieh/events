@@ -6,3 +6,4 @@ ecl_crash.dump
 /uploads/files/*
 .git
 .gitignore
+.semaphore-cache
