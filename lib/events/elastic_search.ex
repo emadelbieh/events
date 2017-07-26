@@ -57,10 +57,13 @@ defmodule Events.ElasticSearch do
 
     Task.start fn ->
       case request :post, url, body do
+        {:ok, %HTTPoison.Response{body: body, status_code: 400}} ->
+          body = Poison.decode!(body)
+          Logger.warn "Error in creating event: #{body["error"]["reason"]}"
         {:ok, _} ->
-          Logger.info "Event #{data["type"]} logged."
+          Logger.info "Event #{data["data"]} #{data["type"]} logged."
         {:error, reason} ->
-          Logger.warn "Error creating event #{data["type"]} with reason #{inspect reason}"
+          Logger.warn "Error creating event #{data["data"]} #{data["type"]} with reason #{inspect reason}"
       end
     end
   end
