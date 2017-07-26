@@ -51,6 +51,15 @@ defmodule Events.ElasticSearch do
   end
 
   def create_event(data) do
+    data = if(price = data["data_details"]["price"]) do
+      data_details = data["data_details"]
+      data_details = Map.put(data_details, "input_price", price)
+      data_details = Map.put(data_details, "price", Events.PriceCleaner.clean(price))
+      Map.put(data, "data_details", data_details)
+    else
+      data
+    end
+
     timestamp = Timex.now() |> Timex.format!("{ISO:Extended}")
     body = Map.put(data, "date", timestamp) |> Poison.encode!
     url = Path.join([url(), index_name(), @doc_type])
