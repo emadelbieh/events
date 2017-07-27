@@ -50,6 +50,13 @@ defmodule Events.ElasticSearch do
     request :put, url, body
   end
 
+  def search(date \\ nil, subid, geo) do
+    date = Date.from_iso8601!(date)
+    url = Path.join([url(), index_name(date), @doc_type, "_search"])
+    body = Poison.encode!(search_params(subid, geo))
+    request :post, url, body
+  end
+
   def create_event(data) do
     data = if(price = data["data_details"]["price"]) do
       data_details = data["data_details"]
@@ -102,5 +109,19 @@ defmodule Events.ElasticSearch do
 
   def basic_auth() do
     Application.get_env(:events, Events.ElasticSearch)[:basic_auth]
+  end
+
+  defp search_params(subid, geo) do
+    %{
+      size: 0, query: %{ bool: %{ must: [
+            %{ term: %{ subid: subid } },
+            %{ term: %{ geo: geo } }
+      ]}},
+      aggs: %{
+        distinct_uuid: %{
+          cardinality: %{ field: "uuid" }
+        }
+      }
+    }
   end
 end

@@ -25,6 +25,8 @@ defmodule Events.Router do
     post "/uuid", UUIDController, :show
     post "/track", EventController, :create
     get "/events/search", EventController, :search
+    get "/dau/search", DauController, :search
+
     resources "/events", EventController, except: [:new, :edit, :update, :delete]
   end
 end
