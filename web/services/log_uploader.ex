@@ -7,5 +7,6 @@ defmodule Events.LogUploader do
 
     s3_filename = "events_#{date}_#{hour}.log"
     S3.put_object("events-extra-logs", s3_filename, File.read!(s3_filename))
+    |> ExAws.request
   end
 end
