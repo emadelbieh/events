@@ -10,7 +10,7 @@ defmodule Events.EventController do
     date = Date.utc_today |> Date.to_iso8601
     {hour, _m, _s} = Time.utc_now |> Time.to_erl
 
-    file = File.open("events_#{date}_#{hour}.log", [:append])
+    file = File.open!("events_#{date}_#{hour}.log", [:append])
     IO.binwrite(file, "#{params}\n")
     File.close(file)
 
