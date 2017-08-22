@@ -7,7 +7,13 @@ defmodule Events.DauController do
     case ES.search(date, subid, geo) do
       {:ok, %HTTPoison.Response{body: data}} ->
         data = Poison.decode!(data)
-        dau = data["aggregations"]["distinct_uuid"]["value"]
+
+        dau = if data["error"] do
+          0
+        else
+          dau = data["aggregations"]["distinct_uuid"]["value"]
+        end
+
         json(conn, %{subid: subid, date: date, geo: geo, dau: dau})
       _ ->
         json(conn, %{error: "error retrieving dau"})
