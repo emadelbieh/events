@@ -24,7 +24,7 @@ config :logger, level: :info
 
 config :quantum, :events,
   cron: [
-    "* * * * *": {"Events.LogCleaner", :delete_log_previous_hour}
+    "5 * * * *": {"Events.LogCleaner", :delete_log_previous_hour}
   ]
 
 # ## SSL Support
