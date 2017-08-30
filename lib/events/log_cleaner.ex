@@ -1,12 +1,18 @@
 defmodule Events.LogCleaner do
-  def delete_file_from_previous_hour do
-    {{year, month, day} = date, {hour, minute, second} = time} = Timex.now |> Timex.to_erl
-    {year, month, day, hour} = Events.TimeUtils.previous_hour
+  def get_log_filename({date, {hour, _minute, _second}}) do
+    iso8601_date =
+      date
+      |> Date.from_erl!()
+      |> Date.to_iso8601()
 
-    date = {year, month, day}
-    {:ok, date} = Date.from_erl(date)
-    date = date |> Date.to_iso8601
+    "events_#{iso8601_date}_#{hour}.log"
+  end
 
-    File.rm("events_#{date}_#{hour}.log")
+  def delete_log_previous_hour(datetime \\ Timex.now()) do
+    datetime
+    |> Timex.to_erl()
+    |> Events.TimeUtils.previous_hour()
+    |> get_log_filename()
+    |> File.rm()
   end
 end
