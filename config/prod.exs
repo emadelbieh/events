@@ -22,6 +22,11 @@ config :events, Events.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :quantum, :events,
+  cron: [
+    "* * * * *": {"Events.LogCleaner", :delete_log_previous_hour}
+  ]
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
