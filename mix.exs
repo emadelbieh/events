@@ -18,7 +18,8 @@ defmodule Events.Mixfile do
   def application do
     [mod: {Events, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :postgrex, :uuid, :httpoison, :timex, :ex_aws, :poison, :hackney]]
+                    :postgrex, :uuid, :httpoison, :timex, :ex_aws, :poison, :hackney,
+                    :crontab, :quantum]]
   end
 
   # Specifies which paths to compile per environment.
@@ -44,6 +45,8 @@ defmodule Events.Mixfile do
      {:ex_aws, "~> 1.0"},
      {:poison, "~> 2.0"},
      {:hackney, "~> 1.6"},
+     {:crontab, "~> 1.0.0"},
+     {:quantum, ">= 1.9.0"},
    ]
   end
 end
